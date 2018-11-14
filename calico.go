@@ -68,7 +68,7 @@ func cmdAdd(args *skel.CmdArgs) error {
 
 	ConfigureLogging(conf.LogLevel)
 
-	workload, orchestrator, err := GetIdentifiers(args)
+	workload, orchestrator, name, err := GetIdentifiers(args)
 	if err != nil {
 		return err
 	}
@@ -81,6 +81,7 @@ func cmdAdd(args *skel.CmdArgs) error {
 	logger.WithFields(log.Fields{
 		"Orchestrator": orchestrator,
 		"Node":         nodename,
+		"Name":		name,
 	}).Info("Extracted identifiers")
 
 	logger.WithFields(log.Fields{"NetConfg": conf}).Info("Loaded CNI NetConf")
@@ -91,6 +92,7 @@ func cmdAdd(args *skel.CmdArgs) error {
 
 	// Always check if there's an existing endpoint.
 	endpoints, err := calicoClient.WorkloadEndpoints().List(api.WorkloadEndpointMetadata{
+		Name:         name,
 		Node:         nodename,
 		Orchestrator: orchestrator,
 		Workload:     workload})
@@ -292,7 +294,7 @@ func cmdDel(args *skel.CmdArgs) error {
 
 	ConfigureLogging(conf.LogLevel)
 
-	workload, orchestrator, err := GetIdentifiers(args)
+	workload, orchestrator, name, err := GetIdentifiers(args)
 	if err != nil {
 		return err
 	}
@@ -306,6 +308,7 @@ func cmdDel(args *skel.CmdArgs) error {
 		"Workload":     workload,
 		"Orchestrator": orchestrator,
 		"Node":         nodename,
+		"Name":		name,
 	}).Info("Extracted identifiers")
 
 	calicoClient, err := CreateClient(conf)
@@ -314,7 +317,7 @@ func cmdDel(args *skel.CmdArgs) error {
 	}
 
 	wep := api.WorkloadEndpointMetadata{
-		Name:         args.IfName,
+		Name:         name,
 		Node:         nodename,
 		Orchestrator: orchestrator,
 		Workload:     workload,

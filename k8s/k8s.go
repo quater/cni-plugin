@@ -56,7 +56,7 @@ func CmdAddK8s(args *skel.CmdArgs, conf utils.NetConf, nodename string, calicoCl
 
 	utils.ConfigureLogging(conf.LogLevel)
 
-	workload, orchestrator, err := utils.GetIdentifiers(args)
+	workload, orchestrator, _,err := utils.GetIdentifiers(args)
 	if err != nil {
 		return nil, err
 	}

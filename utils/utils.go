@@ -153,21 +153,22 @@ func CreateResultFromEndpoint(ep *api.WorkloadEndpoint) (*current.Result, error)
 	return result, nil
 }
 
-func GetIdentifiers(args *skel.CmdArgs) (workloadID string, orchestratorID string, err error) {
+func GetIdentifiers(args *skel.CmdArgs) (workloadID string, orchestratorID string, name string, err error) {
 	// Determine if running under k8s by checking the CNI args
 	k8sArgs := K8sArgs{}
 	if err = types.LoadArgs(args.Args, &k8sArgs); err != nil {
-		return workloadID, orchestratorID, err
+		return workloadID, orchestratorID, name, err
 	}
 
 	if string(k8sArgs.K8S_POD_NAMESPACE) != "" && string(k8sArgs.K8S_POD_NAME) != "" {
 		workloadID = fmt.Sprintf("%s.%s", k8sArgs.K8S_POD_NAMESPACE, k8sArgs.K8S_POD_NAME)
 		orchestratorID = "k8s"
 	} else {
+		name = args.IfName
 		workloadID = args.ContainerID
 		orchestratorID = "cni"
 	}
-	return workloadID, orchestratorID, nil
+	return workloadID, orchestratorID, name, nil
 }
 
 func PopulateEndpointNets(endpoint *api.WorkloadEndpoint, result *current.Result) error {

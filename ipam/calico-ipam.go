@@ -78,7 +78,7 @@ func cmdAdd(args *skel.CmdArgs) error {
 		return err
 	}
 
-	workloadID, _, err := utils.GetIdentifiers(args)
+	workloadID, _, _, err := utils.GetIdentifiers(args)
 	if err != nil {
 		return err
 	}
@@ -147,6 +147,7 @@ func cmdAdd(args *skel.CmdArgs) error {
 			return err
 		}
 
+
 		assignArgs := client.AutoAssignArgs{
 			Num4:      num4,
 			Num6:      num6,
@@ -204,7 +205,7 @@ func cmdDel(args *skel.CmdArgs) error {
 	}
 
 	// Release the IP address by using the handle - which is workloadID.
-	workloadID, _, err := utils.GetIdentifiers(args)
+	workloadID, _, _, err := utils.GetIdentifiers(args)
 	if err != nil {
 		return err
 	}
